@@ -36,7 +36,13 @@ const Dashboard = styled.div`
 Dashboard.displayName = 'Dashboard'
 
 const IndexPage: React.FC = () => {
-  const [states, updateStates] = useImmer<StateData[]>([])
+  const [states, updateStates] = useImmer<StateData[]>([
+    {
+      territory: 'US',
+      active: false,
+      name: 'United States',
+    },
+  ])
 
   const [dates, updateDates] = useImmer({
     startDate: moment('20200101'),
@@ -78,7 +84,6 @@ const IndexPage: React.FC = () => {
                 />
               )
             })}
-            <CovidChart startDate={dates.startDate} endDate={dates.endDate} />
           </div>
         </div>
       </Dashboard>

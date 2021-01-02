@@ -23,8 +23,14 @@ const Controls = styled.div`
     border: 1px solid transparent;
     border-radius: 10px;
     cursor: pointer;
+    &.is-us {
+      background-color: lightgreen;
+    }
     &.active {
       background-color: lightblue;
+      &.is-us {
+        background-color: green;
+      }
       font-weight: 800;
     }
   }
@@ -34,15 +40,15 @@ Controls.displayName = 'Controls'
 const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
   const getStates = async () => {
     const state = await axios.get('https://api.covidtracking.com/v1/states/info.json')
-    updateStates(() => {
+    updateStates((draft) => {
       const mutatedStates = map(state.data, (d) => {
         return {
-          state: d.state,
+          territory: d.state,
           name: d.name,
           active: false,
         }
       })
-      return mutatedStates
+      return [...draft, ...mutatedStates]
     })
   }
 
@@ -52,7 +58,7 @@ const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
 
   const onClick = (s: StateData) => {
     updateStates((draft) => {
-      const stateIndex = findIndex(states, (ast) => ast.state === s.state)
+      const stateIndex = findIndex(states, (ast) => ast.territory === s.territory)
       draft[stateIndex].active = !draft[stateIndex].active
     })
   }
@@ -61,8 +67,12 @@ const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
     <Controls className="controls">
       {map(states, (s, i) => {
         return (
-          <button key={i} onClick={() => onClick(s)} className={cn({ active: s.active })}>
-            {s.state}
+          <button
+            key={i}
+            onClick={() => onClick(s)}
+            className={cn({ active: s.active, 'is-us': s.territory === 'US' })}
+          >
+            {s.territory}
           </button>
         )
       })}

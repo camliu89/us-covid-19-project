@@ -1,5 +1,5 @@
 export type StateData = {
-  state: string
+  territory: string
   name: string
   active: boolean
 }
