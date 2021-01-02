@@ -71,7 +71,7 @@ const IndexPage: React.FC = () => {
               if (!s.active) return null
               return (
                 <CovidChart
-                  state={s.state}
+                  stateData={s}
                   key={i}
                   startDate={dates.startDate}
                   endDate={dates.endDate}

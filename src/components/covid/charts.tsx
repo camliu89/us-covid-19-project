@@ -14,6 +14,8 @@ import { compact, map, isEmpty, sortBy, upperCase } from 'lodash'
 import axios from 'axios'
 import styled from 'styled-components'
 
+import { StateData } from '../../utils/types'
+
 const StyledChart = styled.div`
   border: 1px solid;
   padding: 0 1rem 1rem;
@@ -21,16 +23,16 @@ const StyledChart = styled.div`
 `
 
 type ComponentProps = {
-  state?: string
+  stateData?: StateData
   startDate: Moment
   endDate: Moment
 }
 
-const LineData: React.FC<ComponentProps> = ({ state, startDate, endDate }) => {
+const LineData: React.FC<ComponentProps> = ({ stateData, startDate, endDate }) => {
   const getData = async () => {
     let api = 'https://api.covidtracking.com/v1/us/daily.json'
-    if (state) {
-      api = `https://api.covidtracking.com/v1/states/${state}/daily.json`
+    if (stateData) {
+      api = `https://api.covidtracking.com/v1/states/${stateData.state}/daily.json`
     }
     const result = await axios.get(api)
     // sort by date in ASC order
@@ -69,7 +71,7 @@ const LineData: React.FC<ComponentProps> = ({ state, startDate, endDate }) => {
     else {
       return (
         <>
-          <h2>{state ? upperCase(state) : 'US'}</h2>
+          <h2>{stateData ? upperCase(stateData.name) : 'US'}</h2>
           <div style={{ width: '100%', height: 250 }}>
             <ResponsiveContainer>
               <LineChart

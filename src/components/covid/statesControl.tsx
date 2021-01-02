@@ -38,6 +38,7 @@ const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
       const mutatedStates = map(state.data, (d) => {
         return {
           state: d.state,
+          name: d.name,
           active: false,
         }
       })
