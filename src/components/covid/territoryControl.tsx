@@ -4,11 +4,11 @@ import { map, findIndex } from 'lodash'
 import cn from 'classnames'
 import styled from 'styled-components'
 
-import { StateData } from '../../utils/types'
+import { TerritoryData } from '../../utils/types'
 
 type ComponentProps = {
-  states: StateData[]
-  updateStates: any
+  territories: TerritoryData[]
+  updateTerritories: any
 }
 
 const Controls = styled.div`
@@ -37,11 +37,11 @@ const Controls = styled.div`
 `
 Controls.displayName = 'Controls'
 
-const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
+const TerritoryControl: React.FC<ComponentProps> = ({ territories, updateTerritories }) => {
   const getStates = async () => {
-    const state = await axios.get('https://api.covidtracking.com/v1/states/info.json')
-    updateStates((draft) => {
-      const mutatedStates = map(state.data, (d) => {
+    const states = await axios.get('https://api.covidtracking.com/v1/states/info.json')
+    updateTerritories((draft) => {
+      const mutatedStates = map(states.data, (d) => {
         return {
           territory: d.state,
           name: d.name,
@@ -56,16 +56,16 @@ const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
     getStates()
   }, [])
 
-  const onClick = (s: StateData) => {
-    updateStates((draft) => {
-      const stateIndex = findIndex(states, (ast) => ast.territory === s.territory)
+  const onClick = (s: TerritoryData) => {
+    updateTerritories((draft) => {
+      const stateIndex = findIndex(territories, (ast) => ast.territory === s.territory)
       draft[stateIndex].active = !draft[stateIndex].active
     })
   }
 
   return (
     <Controls className="controls">
-      {map(states, (s, i) => {
+      {map(territories, (s, i) => {
         return (
           <button
             key={i}
@@ -80,4 +80,4 @@ const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
   )
 }
 
-export default StatesControl
+export default TerritoryControl

@@ -7,10 +7,10 @@ import { map } from 'lodash'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import CovidChart from '../components/covid/charts'
-import StatesControl from '../components/covid/statesControl'
+import TerritoryControl from '../components/covid/territoryControl'
 import DateRange from '../components/dateRange'
 
-import { StateData } from '../utils/types'
+import { TerritoryData } from '../utils/types'
 
 import 'react-dates/initialize'
 
@@ -36,7 +36,7 @@ const Dashboard = styled.div`
 Dashboard.displayName = 'Dashboard'
 
 const IndexPage: React.FC = () => {
-  const [states, updateStates] = useImmer<StateData[]>([
+  const [territories, updateTerritories] = useImmer<TerritoryData[]>([
     {
       territory: 'US',
       active: false,
@@ -63,7 +63,7 @@ const IndexPage: React.FC = () => {
     <Layout>
       <SEO title="Home" />
       <Dashboard>
-        <StatesControl states={states} updateStates={updateStates} />
+        <TerritoryControl territories={territories} updateTerritories={updateTerritories} />
         <div className="data">
           <DateRange
             startDate={dates.startDate}
@@ -73,11 +73,11 @@ const IndexPage: React.FC = () => {
             setEndDate={(date) => updateDatesCallback(date, 'endDate')}
           />
           <div className="charts">
-            {map(states, (s, i) => {
+            {map(territories, (s, i) => {
               if (!s.active) return null
               return (
                 <CovidChart
-                  stateData={s}
+                  territoryData={s}
                   key={i}
                   startDate={dates.startDate}
                   endDate={dates.endDate}

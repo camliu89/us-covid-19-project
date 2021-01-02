@@ -13,26 +13,30 @@ import moment, { Moment } from 'moment'
 import { compact, map, isEmpty, sortBy } from 'lodash'
 import axios from 'axios'
 import styled from 'styled-components'
+import cn from 'classnames'
 
-import { StateData } from '../../utils/types'
+import { TerritoryData } from '../../utils/types'
 
 const StyledChart = styled.div`
   border: 1px solid;
   padding: 0 1rem 1rem;
   margin: 1rem 0;
+  &.is-us {
+    border: 2px solid green;
+  }
 `
 
 type ComponentProps = {
-  stateData: StateData
+  territoryData: TerritoryData
   startDate: Moment
   endDate: Moment
 }
 
-const LineData: React.FC<ComponentProps> = ({ stateData, startDate, endDate }) => {
+const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate }) => {
   const getData = async () => {
     let api = 'https://api.covidtracking.com/v1/us/daily.json'
-    if (stateData && stateData.territory !== 'US') {
-      api = `https://api.covidtracking.com/v1/states/${stateData.territory}/daily.json`
+    if (territoryData && territoryData.territory !== 'US') {
+      api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
     }
     const result = await axios.get(api)
     // sort by date in ASC order
@@ -71,7 +75,7 @@ const LineData: React.FC<ComponentProps> = ({ stateData, startDate, endDate }) =
     else {
       return (
         <>
-          <h2>{stateData.name}</h2>
+          <h2>{territoryData.name}</h2>
           <div style={{ width: '100%', height: 250 }}>
             <ResponsiveContainer>
               <LineChart
@@ -102,7 +106,11 @@ const LineData: React.FC<ComponentProps> = ({ stateData, startDate, endDate }) =
     }
   }
 
-  return <StyledChart>{renderChart()}</StyledChart>
+  return (
+    <StyledChart className={cn({ 'is-us': territoryData.territory === 'US' })}>
+      {renderChart()}
+    </StyledChart>
+  )
 }
 
 export default LineData
