@@ -2,12 +2,15 @@ import React, { useCallback } from 'react'
 import { useImmer } from 'use-immer'
 import styled from 'styled-components'
 import moment from 'moment'
+import { map } from 'lodash'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import CovidChart from '../components/covid/charts'
 import StatesControl from '../components/covid/statesControl'
 import DateRange from '../components/dateRange'
+
+import { StateData } from '../utils/types'
 
 import 'react-dates/initialize'
 
@@ -33,7 +36,7 @@ const Dashboard = styled.div`
 Dashboard.displayName = 'Dashboard'
 
 const IndexPage: React.FC = () => {
-  const [activeStates, updateActiveStates] = useImmer([])
+  const [states, updateStates] = useImmer<StateData[]>([])
 
   const [dates, updateDates] = useImmer({
     startDate: moment('20200101'),
@@ -54,7 +57,7 @@ const IndexPage: React.FC = () => {
     <Layout>
       <SEO title="Home" />
       <Dashboard>
-        <StatesControl activeStates={activeStates} updateActiveStates={updateActiveStates} />
+        <StatesControl states={states} updateStates={updateStates} />
         <div className="data">
           <DateRange
             startDate={dates.startDate}
@@ -64,9 +67,17 @@ const IndexPage: React.FC = () => {
             setEndDate={(date) => updateDatesCallback(date, 'endDate')}
           />
           <div className="charts">
-            {activeStates.map((s, i) => (
-              <CovidChart state={s} key={i} startDate={dates.startDate} endDate={dates.endDate} />
-            ))}
+            {map(states, (s, i) => {
+              if (!s.active) return null
+              return (
+                <CovidChart
+                  state={s.state}
+                  key={i}
+                  startDate={dates.startDate}
+                  endDate={dates.endDate}
+                />
+              )
+            })}
             <CovidChart startDate={dates.startDate} endDate={dates.endDate} />
           </div>
         </div>

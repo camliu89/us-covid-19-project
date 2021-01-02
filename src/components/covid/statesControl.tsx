@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'
-import { map, lowerCase, findIndex } from 'lodash'
+import { map, findIndex } from 'lodash'
 import cn from 'classnames'
 import styled from 'styled-components'
 
+import { StateData } from '../../utils/types'
+
 type ComponentProps = {
-  activeStates: any
-  updateActiveStates: any
+  states: StateData[]
+  updateStates: any
 }
 
 const Controls = styled.div`
@@ -29,37 +31,37 @@ const Controls = styled.div`
 `
 Controls.displayName = 'Controls'
 
-const StatesControl: React.FC<ComponentProps> = ({ activeStates, updateActiveStates }) => {
+const StatesControl: React.FC<ComponentProps> = ({ states, updateStates }) => {
   const getStates = async () => {
     const state = await axios.get('https://api.covidtracking.com/v1/states/info.json')
-    setStates(map(state.data, (d) => d.state))
+    updateStates(() => {
+      const mutatedStates = map(state.data, (d) => {
+        return {
+          state: d.state,
+          active: false,
+        }
+      })
+      return mutatedStates
+    })
   }
-
-  const [states, setStates] = useState<string[]>([])
 
   useEffect(() => {
     getStates()
   }, [])
 
-  const onClick = (s: string, activeStateIndex: number) => {
-    updateActiveStates((draft) => {
-      const state = lowerCase(s)
-      if (activeStateIndex >= 0) draft.splice(activeStateIndex, 1)
-      else draft.push(state)
+  const onClick = (s: StateData) => {
+    updateStates((draft) => {
+      const stateIndex = findIndex(states, (ast) => ast.state === s.state)
+      draft[stateIndex].active = !draft[stateIndex].active
     })
   }
 
   return (
     <Controls className="controls">
       {map(states, (s, i) => {
-        const activeStateIndex = findIndex(activeStates, (ast) => ast === lowerCase(s))
         return (
-          <button
-            key={i}
-            onClick={() => onClick(s, activeStateIndex)}
-            className={cn({ active: activeStateIndex >= 0 })}
-          >
-            {s}
+          <button key={i} onClick={() => onClick(s)} className={cn({ active: s.active })}>
+            {s.state}
           </button>
         )
       })}
