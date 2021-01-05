@@ -53,9 +53,14 @@ const StyledControls = styled.div`
         width: 100%;
       }
       &.active {
-        background-color: ${colors.skyblue};
-
+        background-color: ${colors.starblue};
+        color: white;
         font-weight: 800;
+      }
+      &:hover {
+        box-shadow: 10px 10px 5px whitesmoke;
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
       }
     }
     // add transition when showing the sidebar

@@ -15,6 +15,8 @@ import axios from 'axios'
 import styled from 'styled-components'
 import cn from 'classnames'
 
+import Loading from '../loading'
+
 import { TerritoryData } from '../../utils/types'
 import { colors } from '../../styles/theme'
 
@@ -74,7 +76,7 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate 
   )
 
   const renderChart = () => {
-    if (isEmpty(data)) return <p>loading...</p>
+    if (isEmpty(data)) return <Loading />
     else {
       return (
         <>
