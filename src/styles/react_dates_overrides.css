@@ -1,3 +1,7 @@
 .DateInput_input {
     width: 80%;
 }
+
+.DateRangePickerInput {
+    border: 2px solid #CAF0F8;
+}

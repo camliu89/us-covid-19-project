@@ -16,15 +16,9 @@ import styled from 'styled-components'
 import cn from 'classnames'
 
 import { TerritoryData } from '../../utils/types'
+import { colors } from '../../styles/theme'
 
-const StyledChart = styled.div`
-  border: 1px solid;
-  padding: 0 1rem 1rem;
-  margin: 1rem 0;
-  &.is-us {
-    border: 2px solid green;
-  }
-`
+import content from '../../data/test.json'
 
 type ComponentProps = {
   territoryData: TerritoryData
@@ -32,15 +26,24 @@ type ComponentProps = {
   endDate: Moment
 }
 
+const StyledChart = styled.div`
+  border: 2px solid ${colors.blizzard};
+  padding: 0 1rem 1rem;
+  margin: 1rem 0;
+`
+StyledChart.displayName = 'StyledChart'
+
 const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate }) => {
   const getData = async () => {
-    let api = 'https://api.covidtracking.com/v1/us/daily.json'
-    if (territoryData && territoryData.territory !== 'US') {
-      api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
-    }
-    const result = await axios.get(api)
+    // let api = 'https://api.covidtracking.com/v1/us/daily.json'
+    // if (territoryData && territoryData.territory !== 'US') {
+    //   api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
+    // }
+    //const result = await axios.get(api)
+    const result = content
     // sort by date in ASC order
-    setData(sortBy(result.data, (d) => d.date))
+    //setData(sortBy(result.data, (d) => d.date))
+    setData(sortBy(result, (d) => d.date))
   }
 
   const [data, setData] = useState([])
@@ -76,7 +79,7 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate 
       return (
         <>
           <h2>{territoryData.name}</h2>
-          <div style={{ width: '100%', height: 250 }}>
+          <div style={{ width: '100%', height: 200 }}>
             <ResponsiveContainer>
               <LineChart
                 data={mutatedData}

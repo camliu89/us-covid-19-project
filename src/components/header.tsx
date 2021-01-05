@@ -1,36 +1,33 @@
 import React from 'react'
 import { Link } from 'gatsby'
+import styled from 'styled-components'
+
+import { colors } from '../styles/theme'
 
 type ComponentProps = {
   siteTitle: string
 }
 
+const StyledHeader = styled.div`
+  padding: 1.5rem 3rem;
+  h1 {
+    margin: 0;
+    a {
+      color: ${colors.starblue};
+      text-decoration: none;
+    }
+  }
+`
+StyledHeader.displayName = 'StyledHeader'
+
 const Header: React.FC<ComponentProps> = ({ siteTitle }) => (
-  <header
-    style={{
-      background: `rebeccapurple`,
-    }}
-  >
-    <div
-      style={{
-        margin: `0 auto`,
-        maxWidth: 960,
-        padding: `1.45rem 1.0875rem`,
-      }}
-    >
-      <h1 style={{ margin: 0 }}>
-        <Link
-          to="/"
-          style={{
-            color: `white`,
-            textDecoration: `none`,
-          }}
-        >
-          {siteTitle}
-        </Link>
+  <StyledHeader>
+    <div>
+      <h1>
+        <Link to="/">{siteTitle}</Link>
       </h1>
     </div>
-  </header>
+  </StyledHeader>
 )
 
 export default Header

@@ -1,29 +1,54 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useImmer } from 'use-immer'
 import styled from 'styled-components'
 import moment from 'moment'
-import { map } from 'lodash'
+import { map, some } from 'lodash'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import CovidChart from '../components/covid/charts'
-import TerritoryControl from '../components/covid/territoryControl'
+import TerritoryControl from '../components/covid/controls'
 import DateRange from '../components/dateRange'
 
 import { TerritoryData } from '../utils/types'
+import { colors } from '../styles/theme'
 
 import 'react-dates/initialize'
 
-const Dashboard = styled.div`
-  display: flex;
+const StyledDashboard = styled.div`
+  padding: 2rem;
   .controls {
-    flex: 0 0 15%;
+    display: flex;
+    padding-left: 1rem;
+    button {
+      border: 2px solid ${colors.powderblue};
+      background: white;
+      color: #484848;
+      font-weight: 800;
+      cursor: pointer;
+      border-radius: 2px;
+      padding: 0 1rem;
+    }
+    .DateRangePicker {
+      margin-left: 1rem;
+    }
   }
   .data {
-    flex: 0 85%;
+    .empty-data {
+      text-align: center;
+      margin-top: 10rem;
+      font-size: 2rem;
+      button {
+        background: white;
+        border: none;
+        font-size: 1.5rem;
+        color: #0077b6;
+        -webkit-text-stroke: thin;
+        cursor: pointer;
+      }
+    }
     .charts {
-      margin: 0 auto;
-      padding: 2rem;
+      margin: 1rem auto;
       display: flex;
       flex-flow: row wrap;
       justify-content: space-evenly;
@@ -33,7 +58,7 @@ const Dashboard = styled.div`
     }
   }
 `
-Dashboard.displayName = 'Dashboard'
+StyledDashboard.displayName = 'StyledDashboard'
 
 const IndexPage: React.FC = () => {
   const [territories, updateTerritories] = useImmer<TerritoryData[]>([
@@ -59,12 +84,47 @@ const IndexPage: React.FC = () => {
     [dates],
   )
 
+  const [showControls, setShowControls] = useState<boolean>(false)
+
+  const renderTerritories = () => {
+    const anyTerritories = some(territories, (t) => t.active)
+    if (!anyTerritories) {
+      return (
+        <div className="empty-data">
+          <h2>No territories selected</h2>
+          <button onClick={() => setShowControls(true)}>+ add territories</button>
+        </div>
+      )
+    }
+    return (
+      <div className="charts">
+        {map(territories, (s, i) => {
+          if (!s.active) return null
+          return (
+            <CovidChart
+              territoryData={s}
+              key={i}
+              startDate={dates.startDate}
+              endDate={dates.endDate}
+            />
+          )
+        })}
+      </div>
+    )
+  }
+
   return (
     <Layout>
       <SEO title="Home" />
-      <Dashboard>
-        <TerritoryControl territories={territories} updateTerritories={updateTerritories} />
-        <div className="data">
+      <TerritoryControl
+        territories={territories}
+        updateTerritories={updateTerritories}
+        show={showControls}
+        setShow={setShowControls}
+      />
+      <StyledDashboard>
+        <div className="controls">
+          <button onClick={() => setShowControls(true)}>Show Territories</button>
           <DateRange
             startDate={dates.startDate}
             endDate={dates.endDate}
@@ -72,21 +132,9 @@ const IndexPage: React.FC = () => {
             setStartDate={(date) => updateDatesCallback(date, 'startDate')}
             setEndDate={(date) => updateDatesCallback(date, 'endDate')}
           />
-          <div className="charts">
-            {map(territories, (s, i) => {
-              if (!s.active) return null
-              return (
-                <CovidChart
-                  territoryData={s}
-                  key={i}
-                  startDate={dates.startDate}
-                  endDate={dates.endDate}
-                />
-              )
-            })}
-          </div>
         </div>
-      </Dashboard>
+        <div className="data">{renderTerritories()}</div>
+      </StyledDashboard>
     </Layout>
   )
 }

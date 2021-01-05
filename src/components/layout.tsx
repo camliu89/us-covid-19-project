@@ -1,16 +1,25 @@
-/**
- * Layout component that queries for data
- * with Gatsby's useStaticQuery component
- *
- * See: https://www.gatsbyjs.com/docs/use-static-query/
- */
-
 import React from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
+import styled from 'styled-components'
 
 import Header from './header'
 
 import '../styles/global.css'
+import { colors } from '../styles/theme'
+
+const StyledFooter = styled.div`
+  text-align: center;
+  padding: 0.75rem 0px;
+  border-top: 1px solid;
+  background: ${colors.darkblue};
+  color: ${colors.powderblue};
+  font-weight: 800;
+  box-shadow: 0 0 10px;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+`
+StyledFooter.displayName = 'StyledFooter'
 
 const Layout: React.FC = ({ children }) => {
   const data = useStaticQuery(graphql`
@@ -28,15 +37,7 @@ const Layout: React.FC = ({ children }) => {
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div>
         <main>{children}</main>
-        <footer
-          style={{
-            marginTop: `2rem`,
-          }}
-        >
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.com">Gatsby</a>
-        </footer>
+        <StyledFooter>Copyright © Alexander Cam Liu - {new Date().getFullYear()}</StyledFooter>
       </div>
     </>
   )
