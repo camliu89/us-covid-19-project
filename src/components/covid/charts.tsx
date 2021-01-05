@@ -20,8 +20,6 @@ import Loading from '../loading'
 import { TerritoryData } from '../../utils/types'
 import { colors } from '../../styles/theme'
 
-import content from '../../data/test.json'
-
 type ComponentProps = {
   territoryData: TerritoryData
   startDate: Moment
@@ -59,15 +57,13 @@ StyledChart.displayName = 'StyledChart'
 
 const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate, closeChart }) => {
   const getData = async () => {
-    // let api = 'https://api.covidtracking.com/v1/us/daily.json'
-    // if (territoryData && territoryData.territory !== 'US') {
-    //   api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
-    // }
-    //const result = await axios.get(api)
-    const result = content
+    let api = 'https://api.covidtracking.com/v1/us/daily.json'
+    if (territoryData && territoryData.territory !== 'US') {
+      api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
+    }
+    const result = await axios.get(api)
     // sort by date in ASC order
-    //setData(sortBy(result.data, (d) => d.date))
-    setData(sortBy(result, (d) => d.date))
+    setData(sortBy(result.data, (d) => d.date))
   }
 
   const [data, setData] = useState([])
