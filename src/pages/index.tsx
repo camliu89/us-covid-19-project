@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useImmer } from 'use-immer'
 import styled from 'styled-components'
 import moment from 'moment'
-import { map, some } from 'lodash'
+import { map, some, findIndex } from 'lodash'
 
 import Layout from '../components/layout'
 import SEO from '../components/seo'
@@ -84,6 +84,13 @@ const IndexPage: React.FC = () => {
     [dates],
   )
 
+  const toggleTerritory = (s: TerritoryData) => {
+    updateTerritories((draft) => {
+      const stateIndex = findIndex(territories, (ast) => ast.territory === s.territory)
+      draft[stateIndex].active = !draft[stateIndex].active
+    })
+  }
+
   const [showControls, setShowControls] = useState<boolean>(false)
 
   const renderTerritories = () => {
@@ -106,6 +113,7 @@ const IndexPage: React.FC = () => {
               key={i}
               startDate={dates.startDate}
               endDate={dates.endDate}
+              closeChart={() => toggleTerritory(s)}
             />
           )
         })}
@@ -121,6 +129,7 @@ const IndexPage: React.FC = () => {
         updateTerritories={updateTerritories}
         show={showControls}
         setShow={setShowControls}
+        toggleTerritory={toggleTerritory}
       />
       <StyledDashboard>
         <div className="controls">

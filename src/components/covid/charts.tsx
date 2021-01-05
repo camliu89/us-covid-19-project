@@ -26,16 +26,38 @@ type ComponentProps = {
   territoryData: TerritoryData
   startDate: Moment
   endDate: Moment
+  closeChart: () => void
 }
 
 const StyledChart = styled.div`
   border: 2px solid ${colors.blizzard};
   padding: 0 1rem 1rem;
   margin: 1rem 0;
+  position: relative;
+  .chart-container {
+    .close {
+      opacity: 0;
+      display: block;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background: ${colors.blizzard};
+      padding: 5px;
+      cursor: pointer;
+      font-size: 30px;
+      font-weight: 900;
+      transition: 0.4s;
+    }
+  }
+  &:hover {
+    .chart-container .close {
+      opacity: 1;
+    }
+  }
 `
 StyledChart.displayName = 'StyledChart'
 
-const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate }) => {
+const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate, closeChart }) => {
   const getData = async () => {
     // let api = 'https://api.covidtracking.com/v1/us/daily.json'
     // if (territoryData && territoryData.territory !== 'US') {
@@ -79,7 +101,10 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate 
     if (isEmpty(data)) return <Loading />
     else {
       return (
-        <>
+        <div className="chart-container">
+          <div className="close" onClick={() => closeChart()}>
+            &times;
+          </div>
           <h2>{territoryData.name}</h2>
           <div style={{ width: '100%', height: 200 }}>
             <ResponsiveContainer>
@@ -106,7 +131,7 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate 
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </>
+        </div>
       )
     }
   }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import axios from 'axios'
-import { map, findIndex } from 'lodash'
+import { map } from 'lodash'
 import cn from 'classnames'
 import styled from 'styled-components'
 
@@ -13,6 +13,7 @@ type ComponentProps = {
   updateTerritories: (f: (draft: WritableDraft<TerritoryData>[]) => void | TerritoryData[]) => void
   show: boolean
   setShow?: (show: boolean) => void
+  toggleTerritory: (s: TerritoryData) => void
 }
 
 const StyledControls = styled.div`
@@ -72,7 +73,13 @@ const StyledControls = styled.div`
 `
 StyledControls.displayName = 'Controls'
 
-const Controls: React.FC<ComponentProps> = ({ territories, updateTerritories, show, setShow }) => {
+const Controls: React.FC<ComponentProps> = ({
+  territories,
+  updateTerritories,
+  show,
+  setShow,
+  toggleTerritory,
+}) => {
   const getStates = async () => {
     const states = await axios.get('https://api.covidtracking.com/v1/states/info.json')
     updateTerritories((draft) => {
@@ -91,15 +98,6 @@ const Controls: React.FC<ComponentProps> = ({ territories, updateTerritories, sh
     getStates()
   }, [])
 
-  console.log(show)
-
-  const onClick = (s: TerritoryData) => {
-    updateTerritories((draft) => {
-      const stateIndex = findIndex(territories, (ast) => ast.territory === s.territory)
-      draft[stateIndex].active = !draft[stateIndex].active
-    })
-  }
-
   return (
     <StyledControls>
       <div
@@ -111,7 +109,7 @@ const Controls: React.FC<ComponentProps> = ({ territories, updateTerritories, sh
           return (
             <button
               key={i}
-              onClick={() => onClick(s)}
+              onClick={() => toggleTerritory(s)}
               className={cn({ active: s.active, 'is-us': s.territory === 'US' })}
             >
               {s.territory}
