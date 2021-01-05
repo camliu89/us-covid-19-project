@@ -32,6 +32,16 @@ const StyledDashboard = styled.div`
     .DateRangePicker {
       margin-left: 1rem;
     }
+    @media screen and (max-width: 600px) {
+      flex-flow: column;
+      button {
+        padding: 1rem;
+      }
+      .DateRangePicker {
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+    }
   }
   .data {
     .empty-data {
@@ -54,6 +64,9 @@ const StyledDashboard = styled.div`
       justify-content: space-evenly;
       > div {
         flex: 0 45%;
+        @media screen and (max-width: 600px) {
+          flex: 0 100%;
+        }
       }
     }
   }
