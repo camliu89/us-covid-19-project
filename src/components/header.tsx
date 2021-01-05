@@ -44,7 +44,7 @@ const Header: React.FC<ComponentProps> = ({ siteTitle }) => (
       <Link to="/">{siteTitle}</Link>
     </h1>
     <div className="info-attribute">
-      The data is attributed to the{' '}
+      The data is attributed to{' '}
       <a href="https://covidtracking.com/" target="__blank">
         The COVID Tracking Project at The Atlantic
       </a>{' '}
