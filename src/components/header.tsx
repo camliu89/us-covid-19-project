@@ -24,7 +24,7 @@ const StyledHeader = styled.div`
     border: 2px solid #0077b6;
     padding: 1rem;
     width: 25%;
-    line-height: 24px;
+    line-height: 1.8rem;
     a {
       font-weight: 900;
       color: ${colors.starblue};

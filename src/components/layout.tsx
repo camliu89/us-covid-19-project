@@ -9,7 +9,7 @@ import { colors } from '../styles/theme'
 
 const StyledFooter = styled.div`
   text-align: center;
-  padding: 0.75rem 0px;
+  padding: 0.75rem 0;
   border-top: 1px solid;
   background: ${colors.darkblue};
   color: ${colors.powderblue};

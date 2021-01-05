@@ -9,8 +9,8 @@ const StyledLoader = styled.div`
   min-height: 10vh;
   margin-top: 1rem;
   .loader {
-    width: 40px;
-    height: 40px;
+    width: 4rem;
+    height: 4rem;
     margin-left: -10px;
     border-radius: 50%;
     border-top: 5px solid ${colors.skyblue};

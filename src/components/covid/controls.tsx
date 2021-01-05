@@ -27,13 +27,9 @@ const StyledControls = styled.div`
     background-color: rgba(0, 0, 0, 0.3);
   }
   .controls {
-    display: flex;
-    flex-flow: row wrap;
-    padding: 0.5rem;
-    justify-content: center;
     top: 0;
     bottom: 0;
-    width: 15%;
+    width: 20%;
     position: fixed;
     z-index: 2;
     overflow-x: hidden;
@@ -43,31 +39,47 @@ const StyledControls = styled.div`
     visibility: visible;
     -webkit-transform: translate3d(-100%, 0, 0);
     transform: translate3d(-100%, 0, 0);
-    button {
-      height: 2rem;
-      width: 4rem;
-      margin: 0.75rem;
-      border: 1px solid transparent;
-      border-radius: 10px;
-      cursor: pointer;
-      &.is-us {
-        width: 100%;
-      }
-      &.active {
-        background-color: ${colors.starblue};
-        color: white;
-        font-weight: 800;
-      }
-      &:hover {
-        box-shadow: 10px 10px 5px whitesmoke;
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
-      }
-    }
+
     // add transition when showing the sidebar
     &.open {
       -webkit-transform: translate3d(0, 0, 0);
       transform: translate3d(0, 0, 0);
+    }
+    .header {
+      text-align: center;
+      background-color: ${colors.darkblue};
+      color: ${colors.powderblue};
+      padding: 1rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+    .territories {
+      display: flex;
+      flex-flow: row wrap;
+      padding: 0.5rem;
+      justify-content: center;
+      button {
+        height: 2rem;
+        width: 4rem;
+        margin: 0.75rem;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        &.is-us {
+          width: 100%;
+        }
+        &.active {
+          background-color: ${colors.starblue};
+          color: white;
+          font-weight: 800;
+        }
+        &:hover {
+          box-shadow: 10px 10px 5px whitesmoke;
+          -webkit-transform: scale(1.1);
+          transform: scale(1.1);
+        }
+      }
     }
   }
 `
@@ -105,17 +117,20 @@ const Controls: React.FC<ComponentProps> = ({
         onClick={() => setShow(false)}
       ></div>
       <div className={cn('controls', cn({ open: show }))}>
-        {map(territories, (s, i) => {
-          return (
-            <button
-              key={i}
-              onClick={() => toggleTerritory(s)}
-              className={cn({ active: s.active, 'is-us': s.territory === 'US' })}
-            >
-              {s.territory}
-            </button>
-          )
-        })}
+        <div className="header">Territories</div>
+        <div className="territories">
+          {map(territories, (s, i) => {
+            return (
+              <button
+                key={i}
+                onClick={() => toggleTerritory(s)}
+                className={cn({ active: s.active, 'is-us': s.territory === 'US' })}
+              >
+                {s.territory}
+              </button>
+            )
+          })}
+        </div>
       </div>
     </StyledControls>
   )
