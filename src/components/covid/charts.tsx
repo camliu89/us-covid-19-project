@@ -17,11 +17,12 @@ import cn from 'classnames'
 
 import Loading from '../loading'
 
-import { TerritoryData } from '../../utils/types'
+import { Territory, TerritoryData } from '../../utils/types'
 import { colors } from '../../styles/theme'
+import { generateRandomData } from '../../utils/data'
 
 type ComponentProps = {
-  territoryData: TerritoryData
+  territory: Territory
   startDate: Moment
   endDate: Moment
   closeChart: () => void
@@ -55,18 +56,27 @@ const StyledChart = styled.div`
 `
 StyledChart.displayName = 'StyledChart'
 
-const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate, closeChart }) => {
+const LineData: React.FC<ComponentProps> = ({ territory, startDate, endDate, closeChart }) => {
   const getData = async () => {
-    let api = 'https://api.covidtracking.com/v1/us/daily.json'
-    if (territoryData && territoryData.territory !== 'US') {
-      api = `https://api.covidtracking.com/v1/states/${territoryData.territory}/daily.json`
+    const env = process.env.GATSBY_ENV
+
+    let result: { data: TerritoryData[] }
+    if (env === 'DEVELOPMENT') {
+      result = {
+        data: generateRandomData(20),
+      }
+    } else {
+      let api = 'https://api.covidtracking.com/v1/us/daily.json'
+      if (territory && territory.territory !== 'US') {
+        api = `https://api.covidtracking.com/v1/states/${territory.territory}/daily.json`
+      }
+      result = await axios.get(api)
     }
-    const result = await axios.get(api)
     // sort by date in ASC order
     setData(sortBy(result.data, (d) => d.date))
   }
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState<TerritoryData[]>([])
   // set data empty and fetch in `getData()`
   useEffect(() => {
     getData()
@@ -101,7 +111,7 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate,
           <div className="close" onClick={() => closeChart()}>
             &times;
           </div>
-          <h2>{territoryData.name}</h2>
+          <h2>{territory.name}</h2>
           <div style={{ width: '100%', height: 200 }}>
             <ResponsiveContainer>
               <LineChart
@@ -133,7 +143,7 @@ const LineData: React.FC<ComponentProps> = ({ territoryData, startDate, endDate,
   }
 
   return (
-    <StyledChart className={cn({ 'is-us': territoryData.territory === 'US' })}>
+    <StyledChart className={cn({ 'is-us': territory.territory === 'US' })}>
       {renderChart()}
     </StyledChart>
   )

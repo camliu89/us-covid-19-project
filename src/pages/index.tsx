@@ -10,7 +10,7 @@ import CovidChart from '../components/covid/charts'
 import TerritoryControl from '../components/covid/controls'
 import DateRange from '../components/dateRange'
 
-import { TerritoryData } from '../utils/types'
+import { Territory } from '../utils/types'
 import { colors } from '../styles/theme'
 
 import 'react-dates/initialize'
@@ -74,7 +74,7 @@ const StyledDashboard = styled.div`
 StyledDashboard.displayName = 'StyledDashboard'
 
 const IndexPage: React.FC = () => {
-  const [territories, updateTerritories] = useImmer<TerritoryData[]>([
+  const [territories, updateTerritories] = useImmer<Territory[]>([
     {
       territory: 'US',
       active: false,
@@ -97,7 +97,7 @@ const IndexPage: React.FC = () => {
     [dates],
   )
 
-  const toggleTerritory = (s: TerritoryData) => {
+  const toggleTerritory = (s: Territory) => {
     updateTerritories((draft) => {
       const stateIndex = findIndex(territories, (ast) => ast.territory === s.territory)
       draft[stateIndex].active = !draft[stateIndex].active
@@ -122,7 +122,7 @@ const IndexPage: React.FC = () => {
           if (!s.active) return null
           return (
             <CovidChart
-              territoryData={s}
+              territory={s}
               key={i}
               startDate={dates.startDate}
               endDate={dates.endDate}

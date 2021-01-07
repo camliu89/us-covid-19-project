@@ -4,16 +4,16 @@ import { map } from 'lodash'
 import cn from 'classnames'
 import styled from 'styled-components'
 
-import { TerritoryData } from '../../utils/types'
+import { Territory } from '../../utils/types'
 import { WritableDraft } from 'immer/dist/internal'
 import { colors } from '../../styles/theme'
 
 type ComponentProps = {
-  territories: TerritoryData[]
-  updateTerritories: (f: (draft: WritableDraft<TerritoryData>[]) => void | TerritoryData[]) => void
+  territories: Territory[]
+  updateTerritories: (f: (draft: WritableDraft<Territory>[]) => void | Territory[]) => void
   show: boolean
   setShow?: (show: boolean) => void
-  toggleTerritory: (s: TerritoryData) => void
+  toggleTerritory: (s: Territory) => void
 }
 
 const StyledControls = styled.div`
