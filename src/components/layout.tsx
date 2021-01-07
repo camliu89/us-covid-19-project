@@ -18,6 +18,10 @@ const StyledFooter = styled.div`
   position: fixed;
   width: 100%;
   bottom: 0;
+  a {
+    text-decoration: none;
+    color: ${colors.powderblue};
+  }
 `
 StyledFooter.displayName = 'StyledFooter'
 
@@ -37,7 +41,10 @@ const Layout: React.FC = ({ children }) => {
       <Header siteTitle={data.site.siteMetadata?.title || `Title`} />
       <div>
         <main>{children}</main>
-        <StyledFooter>Copyright © Alexander Cam Liu - {new Date().getFullYear()}</StyledFooter>
+        <StyledFooter>
+          Copyright © <a href="mailto:acamliu89@gmail.com">Alexander Cam Liu</a> -{' '}
+          {new Date().getFullYear()}
+        </StyledFooter>
       </div>
     </>
   )
