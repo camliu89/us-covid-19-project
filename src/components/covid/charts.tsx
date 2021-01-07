@@ -27,6 +27,7 @@ type ComponentProps = {
   endDate: Moment
   toggleTerritory: (t: Territory) => void
   updateTerritoryData: (t: Territory, data: TerritoryData[]) => void
+  dataPoints: any[]
 }
 
 const StyledChart = styled.div`
@@ -63,12 +64,13 @@ const LineData: React.FC<ComponentProps> = ({
   endDate,
   toggleTerritory,
   updateTerritoryData,
+  dataPoints,
 }) => {
   const getData = async () => {
     const env = process.env.GATSBY_ENV
 
     let result: { data: TerritoryData[] }
-    if (env === 'DEVELOPMENT1') {
+    if (env === 'DEVELOPMENT') {
       result = {
         data: generateRandomData(20),
       }
@@ -140,18 +142,19 @@ const LineData: React.FC<ComponentProps> = ({
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="positiveIncrease"
-                  stroke="#cf1b42"
-                  activeDot={{ r: 8 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="negativeIncrease"
-                  stroke="#8884d8"
-                  activeDot={{ r: 8 }}
-                />
+                {map(
+                  dataPoints,
+                  (dp, i) =>
+                    dp.show && (
+                      <Line
+                        key={i}
+                        type="monotone"
+                        dataKey={dp.name}
+                        stroke={dp.color}
+                        activeDot={{ r: 8 }}
+                      />
+                    ),
+                )}
               </LineChart>
             </ResponsiveContainer>
           </div>

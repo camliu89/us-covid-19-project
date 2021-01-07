@@ -84,6 +84,19 @@ const IndexPage: React.FC = () => {
     },
   ])
 
+  const [dataPoints, updateDataPoints] = useImmer([
+    {
+      name: 'positiveIncrease',
+      show: true,
+      color: '#cf1b42',
+    },
+    {
+      name: 'negativeIncrease',
+      show: true,
+      color: '#8884d8',
+    },
+  ])
+
   const [dates, updateDates] = useImmer({
     startDate: moment('20200101'),
     endDate: moment(),
@@ -135,11 +148,35 @@ const IndexPage: React.FC = () => {
               endDate={dates.endDate}
               toggleTerritory={toggleTerritory}
               updateTerritoryData={updateTerritoryData}
+              dataPoints={dataPoints}
             />
           )
         })}
       </div>
     )
+  }
+
+  const renderDataPointsCheckBoxes = () => {
+    return map(dataPoints, (dp, i) => (
+      <div key={i} className="data-points">
+        <input
+          type="checkbox"
+          id={dp.name}
+          name={dp.name}
+          value={dp.name}
+          checked={dp.show}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const checked = e.target.checked
+            const value = e.target.value
+            updateDataPoints((draft) => {
+              const dpIndex = findIndex(draft, (d) => d.name === value)
+              draft[dpIndex].show = checked
+            })
+          }}
+        />
+        <label htmlFor={dp.name}>{dp.name}</label>
+      </div>
+    ))
   }
 
   return (
@@ -163,6 +200,7 @@ const IndexPage: React.FC = () => {
               setStartDate={(date) => updateDatesCallback(date, 'startDate')}
               setEndDate={(date) => updateDatesCallback(date, 'endDate')}
             />
+            {renderDataPointsCheckBoxes()}
           </div>
           <div className="data">{renderTerritories()}</div>
         </StyledDashboard>
