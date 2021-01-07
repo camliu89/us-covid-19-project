@@ -10,7 +10,7 @@ import CovidChart from '../components/covid/charts'
 import TerritoryControl from '../components/covid/controls'
 import DateRange from '../components/dateRange'
 
-import { Territory } from '../utils/types'
+import { Territory, TerritoryData } from '../utils/types'
 import { colors } from '../styles/theme'
 
 import 'react-dates/initialize'
@@ -74,11 +74,14 @@ const StyledDashboard = styled.div`
 StyledDashboard.displayName = 'StyledDashboard'
 
 const IndexPage: React.FC = () => {
+  const [showControls, setShowControls] = useState<boolean>(false)
+
   const [territories, updateTerritories] = useImmer<Territory[]>([
     {
-      territory: 'US',
+      abbreviation: 'US',
       active: false,
       name: 'United States',
+      data: null,
     },
   ])
 
@@ -97,14 +100,19 @@ const IndexPage: React.FC = () => {
     [dates],
   )
 
-  const toggleTerritory = (s: Territory) => {
+  const toggleTerritory = (t: Territory) => {
     updateTerritories((draft) => {
-      const stateIndex = findIndex(territories, (ast) => ast.territory === s.territory)
+      const stateIndex = findIndex(territories, (ts) => ts.abbreviation === t.abbreviation)
       draft[stateIndex].active = !draft[stateIndex].active
     })
   }
 
-  const [showControls, setShowControls] = useState<boolean>(false)
+  const updateTerritoryData = (t: Territory, data: TerritoryData[]) => {
+    updateTerritories((draft) => {
+      const stateIndex = findIndex(territories, (ts) => ts.abbreviation === t.abbreviation)
+      draft[stateIndex].data = data
+    })
+  }
 
   const renderTerritories = () => {
     const anyTerritories = some(territories, (t) => t.active)
@@ -118,15 +126,16 @@ const IndexPage: React.FC = () => {
     }
     return (
       <div className="charts">
-        {map(territories, (s, i) => {
-          if (!s.active) return null
+        {map(territories, (t, i) => {
+          if (!t.active) return null
           return (
             <CovidChart
-              territory={s}
+              territory={t}
               key={i}
               startDate={dates.startDate}
               endDate={dates.endDate}
-              closeChart={() => toggleTerritory(s)}
+              toggleTerritory={toggleTerritory}
+              updateTerritoryData={updateTerritoryData}
             />
           )
         })}

@@ -1,7 +1,8 @@
 export type Territory = {
-  territory: string
+  abbreviation: string
   name: string
   active: boolean
+  data: TerritoryData[]
 }
 
 export type TerritoryData = {

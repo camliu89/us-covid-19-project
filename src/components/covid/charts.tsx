@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import {
   LineChart,
   Line,
@@ -25,7 +25,8 @@ type ComponentProps = {
   territory: Territory
   startDate: Moment
   endDate: Moment
-  closeChart: () => void
+  toggleTerritory: (t: Territory) => void
+  updateTerritoryData: (t: Territory, data: TerritoryData[]) => void
 }
 
 const StyledChart = styled.div`
@@ -56,30 +57,40 @@ const StyledChart = styled.div`
 `
 StyledChart.displayName = 'StyledChart'
 
-const LineData: React.FC<ComponentProps> = ({ territory, startDate, endDate, closeChart }) => {
+const LineData: React.FC<ComponentProps> = ({
+  territory,
+  startDate,
+  endDate,
+  toggleTerritory,
+  updateTerritoryData,
+}) => {
   const getData = async () => {
     const env = process.env.GATSBY_ENV
 
     let result: { data: TerritoryData[] }
-    if (env === 'DEVELOPMENT') {
+    if (env === 'DEVELOPMENT1') {
       result = {
         data: generateRandomData(20),
       }
     } else {
       let api = 'https://api.covidtracking.com/v1/us/daily.json'
-      if (territory && territory.territory !== 'US') {
-        api = `https://api.covidtracking.com/v1/states/${territory.territory}/daily.json`
+      if (territory && territory.abbreviation !== 'US') {
+        api = `https://api.covidtracking.com/v1/states/${territory.abbreviation}/daily.json`
       }
       result = await axios.get(api)
     }
     // sort by date in ASC order
-    setData(sortBy(result.data, (d) => d.date))
+    updateTerritoryData(
+      territory,
+      sortBy(result.data, (d) => d.date),
+    )
   }
 
-  const [data, setData] = useState<TerritoryData[]>([])
   // set data empty and fetch in `getData()`
   useEffect(() => {
-    getData()
+    if (territory && !territory.data) {
+      getData()
+    }
   }, [])
 
   // mutate the data to match the recharts data fields
@@ -87,7 +98,7 @@ const LineData: React.FC<ComponentProps> = ({ territory, startDate, endDate, clo
   const mutatedData = useMemo(
     () =>
       compact(
-        map(data, (d) => {
+        map(territory.data, (d) => {
           const date = moment(d.date.toString())
           const minDate = startDate || moment('20200101')
           const maxDate = endDate || moment()
@@ -100,15 +111,15 @@ const LineData: React.FC<ComponentProps> = ({ territory, startDate, endDate, clo
           }
         }),
       ),
-    [startDate, endDate, data],
+    [startDate, endDate, territory.data],
   )
 
   const renderChart = () => {
-    if (isEmpty(data)) return <Loading />
+    if (isEmpty(territory.data)) return <Loading />
     else {
       return (
         <div className="chart-container">
-          <div className="close" onClick={() => closeChart()}>
+          <div className="close" onClick={() => toggleTerritory(territory)}>
             &times;
           </div>
           <h2>{territory.name}</h2>
@@ -143,7 +154,7 @@ const LineData: React.FC<ComponentProps> = ({ territory, startDate, endDate, clo
   }
 
   return (
-    <StyledChart className={cn({ 'is-us': territory.territory === 'US' })}>
+    <StyledChart className={cn({ 'is-us': territory.abbreviation === 'US' })}>
       {renderChart()}
     </StyledChart>
   )

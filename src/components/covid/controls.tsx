@@ -97,9 +97,10 @@ const Controls: React.FC<ComponentProps> = ({
     updateTerritories((draft) => {
       const mutatedStates = map(states.data, (d) => {
         return {
-          territory: d.state,
+          abbreviation: d.state,
           name: d.name,
           active: false,
+          data: null,
         }
       })
       return [...draft, ...mutatedStates]
@@ -124,9 +125,9 @@ const Controls: React.FC<ComponentProps> = ({
               <button
                 key={i}
                 onClick={() => toggleTerritory(s)}
-                className={cn({ active: s.active, 'is-us': s.territory === 'US' })}
+                className={cn({ active: s.active, 'is-us': s.abbreviation === 'US' })}
               >
-                {s.territory}
+                {s.abbreviation}
               </button>
             )
           })}
