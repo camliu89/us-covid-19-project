@@ -95,7 +95,7 @@ const LineData: React.FC<ComponentProps> = ({
 
   // mutate the data to match the recharts data fields
   // also filter the data with the dates set
-  const mutatedData = useMemo(
+  const mutatedData: TerritoryData[] = useMemo(
     () =>
       compact(
         map(territory.data, (d) => {
@@ -108,6 +108,7 @@ const LineData: React.FC<ComponentProps> = ({
           return {
             date: date.format('M/D/YY'),
             positiveIncrease: d.positiveIncrease || 0,
+            negativeIncrease: d.negativeIncrease || 0,
           }
         }),
       ),
@@ -142,6 +143,12 @@ const LineData: React.FC<ComponentProps> = ({
                 <Line
                   type="monotone"
                   dataKey="positiveIncrease"
+                  stroke="#cf1b42"
+                  activeDot={{ r: 8 }}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="negativeIncrease"
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
                 />

@@ -6,6 +6,7 @@ export type Territory = {
 }
 
 export type TerritoryData = {
-  date: number
+  date: number | string
   positiveIncrease: number
+  negativeIncrease: number
 }

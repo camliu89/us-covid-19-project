@@ -8,10 +8,12 @@ export const generateRandomData = (number: number): TerritoryData[] => {
       .subtract(n - 1, 'days')
       .format('YYYYMMDD')
     const positiveIncrease = random(100, 10000) * 1
+    const negativeIncrease = random(100, 10000) * 1
 
     return {
       date: parseInt(date),
       positiveIncrease,
+      negativeIncrease,
     }
   })
 }

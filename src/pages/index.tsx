@@ -16,10 +16,9 @@ import { colors } from '../styles/theme'
 import 'react-dates/initialize'
 
 const StyledDashboard = styled.div`
-  padding: 2rem;
+  margin-top: 1rem;
   .controls {
     display: flex;
-    padding-left: 1rem;
     button {
       border: 2px solid ${colors.powderblue};
       background: white;
@@ -144,7 +143,7 @@ const IndexPage: React.FC = () => {
   }
 
   return (
-    <Layout>
+    <>
       <SEO title="Home" />
       <TerritoryControl
         territories={territories}
@@ -153,20 +152,22 @@ const IndexPage: React.FC = () => {
         setShow={setShowControls}
         toggleTerritory={toggleTerritory}
       />
-      <StyledDashboard>
-        <div className="controls">
-          <button onClick={() => setShowControls(true)}>Show Territories</button>
-          <DateRange
-            startDate={dates.startDate}
-            endDate={dates.endDate}
-            dateName="covid"
-            setStartDate={(date) => updateDatesCallback(date, 'startDate')}
-            setEndDate={(date) => updateDatesCallback(date, 'endDate')}
-          />
-        </div>
-        <div className="data">{renderTerritories()}</div>
-      </StyledDashboard>
-    </Layout>
+      <Layout>
+        <StyledDashboard>
+          <div className="controls">
+            <button onClick={() => setShowControls(true)}>Show Territories</button>
+            <DateRange
+              startDate={dates.startDate}
+              endDate={dates.endDate}
+              dateName="covid"
+              setStartDate={(date) => updateDatesCallback(date, 'startDate')}
+              setEndDate={(date) => updateDatesCallback(date, 'endDate')}
+            />
+          </div>
+          <div className="data">{renderTerritories()}</div>
+        </StyledDashboard>
+      </Layout>
+    </>
   )
 }
 

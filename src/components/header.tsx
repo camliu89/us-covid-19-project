@@ -9,7 +9,6 @@ type ComponentProps = {
 }
 
 const StyledHeader = styled.div`
-  padding: 1.5rem 3rem;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
