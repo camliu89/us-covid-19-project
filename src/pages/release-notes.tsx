@@ -32,6 +32,7 @@ const NotFoundPage: React.FC = () => (
               <li>Negative Increase.</li>
             </ul>
           </li>
+          <li>Added data points checkboxes to hide or show the data point in the charts.</li>
           <li>Added date picker to filter data points in the charts.</li>
           <li>Added attribution to The COVID Tracking Project at The Atlantic.</li>
         </ul>
