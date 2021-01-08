@@ -7,10 +7,11 @@ import { map, some, findIndex } from 'lodash'
 import Layout from '../components/layout'
 import SEO from '../components/seo'
 import CovidChart from '../components/covid/charts'
-import TerritoryControl from '../components/covid/controls'
-import DateRange from '../components/dateRange'
+import SelectTerritories from '../components/covid/select-territories'
+import DateRange from '../components/covid/controls/date-range'
+import DataPointsDropDown from '../components/covid/controls/data-points-dropdown'
 
-import { Territory, TerritoryData } from '../utils/types'
+import { DataPoints, Territory, TerritoryData } from '../utils/types'
 import { colors } from '../styles/theme'
 
 import 'react-dates/initialize'
@@ -19,21 +20,28 @@ const StyledDashboard = styled.div`
   margin-top: 1rem;
   .controls {
     display: flex;
-    button {
+    .show-territories {
       border: 2px solid ${colors.powderblue};
       background: white;
-      color: #484848;
+      color: ${colors.default};
       font-weight: 800;
+      border-radius: 10px;
       cursor: pointer;
-      border-radius: 2px;
       padding: 0 1rem;
     }
-    .DateRangePicker {
-      margin-left: 1rem;
+    .DateRangePicker,
+    .data-points {
+      margin-left: 2.5rem;
+    }
+    .data-points,
+    .show-territories {
+      p {
+        line-height: 30px;
+      }
     }
     @media screen and (max-width: 600px) {
       flex-flow: column;
-      button {
+      .show-territories {
         padding: 1rem;
       }
       .DateRangePicker {
@@ -84,16 +92,18 @@ const IndexPage: React.FC = () => {
     },
   ])
 
-  const [dataPoints, updateDataPoints] = useImmer([
+  const [dataPoints, updateDataPoints] = useImmer<DataPoints[]>([
     {
-      name: 'positiveIncrease',
+      id: 'positiveIncrease',
       show: true,
       color: '#cf1b42',
+      name: 'positive increase',
     },
     {
-      name: 'negativeIncrease',
+      id: 'negativeIncrease',
       show: true,
       color: '#8884d8',
+      name: 'negative increase',
     },
   ])
 
@@ -156,33 +166,10 @@ const IndexPage: React.FC = () => {
     )
   }
 
-  const renderDataPointsCheckBoxes = () => {
-    return map(dataPoints, (dp, i) => (
-      <div key={i} className="data-points">
-        <input
-          type="checkbox"
-          id={dp.name}
-          name={dp.name}
-          value={dp.name}
-          checked={dp.show}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            const checked = e.target.checked
-            const value = e.target.value
-            updateDataPoints((draft) => {
-              const dpIndex = findIndex(draft, (d) => d.name === value)
-              draft[dpIndex].show = checked
-            })
-          }}
-        />
-        <label htmlFor={dp.name}>{dp.name}</label>
-      </div>
-    ))
-  }
-
   return (
     <>
       <SEO title="Home" />
-      <TerritoryControl
+      <SelectTerritories
         territories={territories}
         updateTerritories={updateTerritories}
         show={showControls}
@@ -192,7 +179,10 @@ const IndexPage: React.FC = () => {
       <Layout>
         <StyledDashboard>
           <div className="controls">
-            <button onClick={() => setShowControls(true)}>Show Territories</button>
+            <div className="show-territories" onClick={() => setShowControls(true)}>
+              <p>Show Territories</p>
+            </div>
+            <DataPointsDropDown dataPoints={dataPoints} updateDataPoints={updateDataPoints} />
             <DateRange
               startDate={dates.startDate}
               endDate={dates.endDate}
@@ -200,7 +190,6 @@ const IndexPage: React.FC = () => {
               setStartDate={(date) => updateDatesCallback(date, 'startDate')}
               setEndDate={(date) => updateDatesCallback(date, 'endDate')}
             />
-            {renderDataPointsCheckBoxes()}
           </div>
           <div className="data">{renderTerritories()}</div>
         </StyledDashboard>

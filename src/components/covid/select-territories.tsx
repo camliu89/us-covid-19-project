@@ -16,7 +16,7 @@ type ComponentProps = {
   toggleTerritory: (s: Territory) => void
 }
 
-const StyledControls = styled.div`
+const StyledSelectTerritories = styled.div`
   .opacity-background.open {
     z-index: 1;
     position: fixed;
@@ -26,7 +26,7 @@ const StyledControls = styled.div`
     transition: opacity 0.3s ease-out 0s, visibility 0.3s ease-out 0s;
     background-color: rgba(0, 0, 0, 0.3);
   }
-  .controls {
+  .select-territories {
     top: 0;
     bottom: 0;
     width: 20%;
@@ -83,9 +83,9 @@ const StyledControls = styled.div`
     }
   }
 `
-StyledControls.displayName = 'Controls'
+StyledSelectTerritories.displayName = 'StyledSelectTerritories'
 
-const Controls: React.FC<ComponentProps> = ({
+const SelectTerritories: React.FC<ComponentProps> = ({
   territories,
   updateTerritories,
   show,
@@ -112,12 +112,12 @@ const Controls: React.FC<ComponentProps> = ({
   }, [])
 
   return (
-    <StyledControls>
+    <StyledSelectTerritories>
       <div
         className={cn('opacity-background', cn({ open: show }))}
         onClick={() => setShow(false)}
       ></div>
-      <div className={cn('controls', cn({ open: show }))}>
+      <div className={cn('select-territories', cn({ open: show }))}>
         <div className="header">Territories</div>
         <div className="territories">
           {map(territories, (s, i) => {
@@ -133,8 +133,8 @@ const Controls: React.FC<ComponentProps> = ({
           })}
         </div>
       </div>
-    </StyledControls>
+    </StyledSelectTerritories>
   )
 }
 
-export default Controls
+export default SelectTerritories

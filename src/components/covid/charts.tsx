@@ -17,7 +17,7 @@ import cn from 'classnames'
 
 import Loading from '../loading'
 
-import { Territory, TerritoryData } from '../../utils/types'
+import { DataPoints, Territory, TerritoryData } from '../../utils/types'
 import { colors } from '../../styles/theme'
 import { generateRandomData } from '../../utils/data'
 
@@ -27,7 +27,7 @@ type ComponentProps = {
   endDate: Moment
   toggleTerritory: (t: Territory) => void
   updateTerritoryData: (t: Territory, data: TerritoryData[]) => void
-  dataPoints: any[]
+  dataPoints: DataPoints[]
 }
 
 const StyledChart = styled.div`
@@ -149,7 +149,7 @@ const LineData: React.FC<ComponentProps> = ({
                       <Line
                         key={i}
                         type="monotone"
-                        dataKey={dp.name}
+                        dataKey={dp.id}
                         stroke={dp.color}
                         activeDot={{ r: 8 }}
                       />

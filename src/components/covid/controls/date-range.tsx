@@ -3,7 +3,7 @@ import { DateRangePicker } from 'react-dates'
 import { Moment } from 'moment'
 
 import 'react-dates/lib/css/_datepicker.css'
-import '../styles/react_dates_overrides.css'
+import '../../../styles/react_dates_overrides.css'
 
 type ComponentProps = {
   startDate?: Moment

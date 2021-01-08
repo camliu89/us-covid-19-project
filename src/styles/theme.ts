@@ -8,4 +8,5 @@ export const colors = {
   light_skyblue: '#90E0EF',
   blizzard: '#ADE8F4',
   powderblue: '#CAF0F8',
+  default: '#484848',
 }
